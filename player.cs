@@ -39,6 +39,10 @@ public class player : MonoBehaviour
     [SerializeField] private float wallCheckDistance;
     [SerializeField] private float groundCheckDistance;
     [SerializeField] private LayerMask whatIsGround;
+    [Space]
+    [SerializeField] private LayerMask whatIsEnemy;
+    [SerializeField] private Transform enemyCheck;
+    [SerializeField] private float enemyCheckRadius;
     private bool isWallDetected;
 
     [Header("knockback")]
@@ -100,6 +104,7 @@ public class player : MonoBehaviour
         {
             return;
         }
+        HandleEnemyDetection();
         HandleInput();
         HandleWallSlide();
         HandleMovement();
@@ -107,6 +112,25 @@ public class player : MonoBehaviour
         HandleCollision();
         HandleAnimation();
 
+    }
+
+    private void HandleEnemyDetection()
+    {
+        if (rb.velocity.y>=0)
+        {
+            return;
+        }
+        Collider2D[] colliders= Physics2D.OverlapCircleAll(enemyCheck.position, enemyCheckRadius, whatIsEnemy);
+
+        foreach(var enemy in colliders)
+        {
+            Enemy newEnemy=enemy.GetComponent<Enemy>();
+            if (newEnemy != null)
+            {
+                newEnemy.Die();
+                Jump();
+            }
+        }
     }
 
     public void RespawnFinished(bool finished)
@@ -302,13 +326,6 @@ public class player : MonoBehaviour
         canDoubleJump = false;
         rb.velocity=new Vector2(rb.velocity.x,doubleJumpForce);
     }
-    private void HandleCollision()
-    {
-        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround);
-
-        isWallDetected = Physics2D.Raycast(transform.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround);
-
-    }
 
     private void HandleAnimation()
     {
@@ -342,6 +359,13 @@ public class player : MonoBehaviour
         }
 
     }
+    private void HandleCollision()
+    {
+        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround);
+
+        isWallDetected = Physics2D.Raycast(transform.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround);
+
+    }
 
 
     private void flip()
@@ -352,6 +376,7 @@ public class player : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
+        Gizmos.DrawWireSphere(enemyCheck.position, enemyCheckRadius);
         Gizmos.DrawLine(transform.position, new Vector2(transform.position.x, transform.position.y-groundCheckDistance ));
 
         Gizmos.DrawLine(transform.position, new Vector2(transform.position.x + (wallCheckDistance*facingDir), transform.position.y));
