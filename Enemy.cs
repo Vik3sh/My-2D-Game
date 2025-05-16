@@ -5,22 +5,32 @@ using UnityEngine.Windows;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] protected Transform player;
     [SerializeField] protected GameObject damageTrigger;
-    [Space]
+
+
+    [Header("Genereal Info")]   
     protected Animator anim;
     protected Rigidbody2D rb;   
     [SerializeField] protected float moveSpeed =2f;
+    protected bool canMove = true;
     [SerializeField] protected float idleDuration =1.5f;
     [SerializeField]protected float idleTimer;
+
+
+
     [Header("Death Details")]
     [SerializeField] private float deathImpactSpeed=5;
     [SerializeField] private float deathRotaitionSpeed=150;
     private int deathRotationDirection = 1;
     protected bool isDead;
+
+
     [Header("Basic collision")]
     [SerializeField] protected float groundCheckDistance = 1.1f;
     [SerializeField] protected float wallCheckDistance = .7f;
     [SerializeField] protected LayerMask whatIsGround;
+    [SerializeField] protected LayerMask whatIsPlayer;
     [SerializeField] protected Transform groundCheck;
     protected bool isGrounded;
     protected bool isGroundInFrontDetected;
@@ -36,6 +46,18 @@ public class Enemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();   
     }
 
+    protected virtual void Start()
+    {
+       InvokeRepeating("UpdatePlayersRef", 0, 1);
+    }
+    private void UpdatePlayersRef()
+    {
+        if (player==null)
+        {
+            player = GameManager.Instance.player.transform;
+        }   
+        
+    }
     protected virtual void Update()
     {
         idleTimer -= Time.deltaTime;
@@ -67,10 +89,10 @@ public class Enemy : MonoBehaviour
     protected virtual void HandleFlip(float xValue)
     {
 
-        if (xValue < 0 && facingRight || xValue > 0 && !facingRight)
+        if (xValue < transform.position.x && facingRight || xValue > transform.position.x && !facingRight)
         {
             flip();
-            idleTimer = idleDuration;
+            
         }
 
     }
@@ -91,7 +113,7 @@ public class Enemy : MonoBehaviour
         facingRight = !facingRight;
     }
 
-    private void OnDrawGizmos()
+    protected virtual void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position, new Vector2(transform.position.x, groundCheck.position.y - groundCheckDistance));
         Gizmos.DrawLine(groundCheck.position, new Vector2(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));
