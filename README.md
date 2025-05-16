@@ -1,12 +1,12 @@
 # 2D Platformer Game
 
-Welcome to my 2D Platformer Game! This project is built using Unity and is part of my game development journey.
+Welcome to my 2D Platformer Game! This project is built using Unity/C# and is part of my game development journey.
 
 ## 🎮 Game Overview
-This is a classic 2D side-scrolling platformer featuring:
-- Player movement and jumping
-- Enemies and obstacles
-- Collectibles (e.g., coins or power-ups)
+This is a classic 2D  platformer gmae featuring:
+- Player movement and jumping(double jump, wall jump, coyote jump)
+- Enemies and traps
+- Collectibles (e.g., fruits)
 - Multiple levels with increasing difficulty
 - Game over and level completion mechanics
 
@@ -33,7 +33,7 @@ This is a classic 2D side-scrolling platformer featuring:
 - Add new levels with unique challenges
 - Introduce power-ups and more enemy types
 - Polish UI/UX and add save/load system
-- Export to WebGL or Windows
+- Make it a co-op and for mobile
 
 ---
 ## 🎥 Gameplay Preview
