@@ -38,7 +38,7 @@ This is a classic 2D side-scrolling platformer featuring:
 ---
 ## 🎥 Gameplay Preview
 
-[![Watch the video](https://img.youtube.com/vi/79KSMhV0gsw/0.jpg)](https://youtu.be/79KSMhV0gsw)
+[![Watch the video](https://img.youtube.com/vi/79KSMhV0gsw/0.jpg)](https://youtu.be/5T424jZMiOg)
 
 
 
