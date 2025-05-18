@@ -5,15 +5,20 @@ using UnityEngine.Windows;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] protected Transform player;
-    [SerializeField] protected GameObject damageTrigger;
+    private SpriteRenderer sr;
+    protected Animator anim;
+    protected Rigidbody2D rb;
+    protected Transform player;
+    protected Collider2D[] colliders;
+
+
+    
 
 
     [Header("Genereal Info")]   
-    protected Animator anim;
-    protected Rigidbody2D rb;   
+     
     [SerializeField] protected float moveSpeed =2f;
-    protected bool canMove = true;
+    protected bool canMove = false;
     [SerializeField] protected float idleDuration =1.5f;
     [SerializeField]protected float idleTimer;
 
@@ -30,8 +35,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] protected float groundCheckDistance = 1.1f;
     [SerializeField] protected float wallCheckDistance = .7f;
     [SerializeField] protected LayerMask whatIsGround;
+    [SerializeField] protected float playerDetectionRange=15;
     [SerializeField] protected LayerMask whatIsPlayer;
     [SerializeField] protected Transform groundCheck;
+    protected bool isPlayerDetected;
     protected bool isGrounded;
     protected bool isGroundInFrontDetected;
     protected bool isWallDetected;
@@ -43,12 +50,21 @@ public class Enemy : MonoBehaviour
     protected virtual void Awake()
     {
         anim = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody2D>();   
+        rb = GetComponent<Rigidbody2D>();  
+        colliders=GetComponentsInChildren<Collider2D>();
     }
 
     protected virtual void Start()
     {
        InvokeRepeating("UpdatePlayersRef", 0, 1);
+        sr = GetComponent<SpriteRenderer>();
+
+        if (sr.flipX==true && !facingRight)
+        {
+            sr.flipX = false;   
+            flip();
+        }
+        
     }
     private void UpdatePlayersRef()
     {
@@ -60,6 +76,8 @@ public class Enemy : MonoBehaviour
     }
     protected virtual void Update()
     {
+        handleAminmator();
+        HandleCollision();
         idleTimer -= Time.deltaTime;
 
         if (isDead)
@@ -68,11 +86,22 @@ public class Enemy : MonoBehaviour
         }
     }
 
+
+    protected virtual void handleAminmator()
+    {
+        anim.SetFloat("xVelocity", rb.velocity.x);
+        
+    }
     public virtual void Die()
     {
-        damageTrigger.SetActive(false); 
+        
+        foreach(var collider in colliders)
+        {
+            collider.enabled = false;
+        }
         anim.SetTrigger("Hit");
         rb.velocity=new Vector2(rb.velocity.x, deathImpactSpeed); 
+
         isDead = true;
         if(Random.Range(0, 100)<50)
         {
@@ -100,9 +129,8 @@ public class Enemy : MonoBehaviour
     {
         isGrounded= Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround);
         isGroundInFrontDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGround);
-
         isWallDetected = Physics2D.Raycast(transform.position, Vector2.right * facinDir, wallCheckDistance, whatIsGround);
-
+        isPlayerDetected = Physics2D.Raycast(transform.position, Vector2.right * facinDir, playerDetectionRange, whatIsPlayer);
     }
 
 
@@ -112,6 +140,11 @@ public class Enemy : MonoBehaviour
         transform.Rotate(0, 180, 0);
         facingRight = !facingRight;
     }
+    [ContextMenu("Change flip direction")]
+    public void flipDefaultFacingDir()
+    {
+        sr.flipX = !sr.flipX;   
+    }
 
     protected virtual void OnDrawGizmos()
     {
@@ -119,5 +152,6 @@ public class Enemy : MonoBehaviour
         Gizmos.DrawLine(groundCheck.position, new Vector2(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));
 
         Gizmos.DrawLine(transform.position, new Vector2(transform.position.x + (wallCheckDistance * facinDir), transform.position.y));
+        Gizmos.DrawLine(transform.position, new Vector2(transform.position.x + (playerDetectionRange * facinDir), transform.position.y));
     }
 }
