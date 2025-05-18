@@ -11,9 +11,9 @@ public class EnemyRino :Enemy
     [SerializeField] private float speedUpRate=.6f;
     private float defaultSpeed;
     [SerializeField] private Vector2 impactPower;
-    [SerializeField] private float detectionRange;
-    private bool playerDetected;
+   
     private bool canCharge=true;
+    
 
     protected override void Start()
     {
@@ -23,25 +23,24 @@ public class EnemyRino :Enemy
     protected override void Update()
     {
         base.Update();
-        anim.SetFloat("xVelocity", rb.velocity.x);
+       
 
-        HandleCollision();
+        
         handleCharge();
     }
 
     private void handleCharge()
     {
-        if (!canMove)
+        if (isDead)
+        {
+            return;
+        }
+        if (canMove == false)
         {
             return;
 
         }
-        moveSpeed += speedUpRate * Time.deltaTime;
-
-        if (moveSpeed > maxSpeed)
-        {
-            maxSpeed = moveSpeed;
-        }
+        HandleSpeedUp();
         rb.velocity = new Vector2(moveSpeed * facinDir, rb.velocity.y);
 
         if (isWallDetected)
@@ -57,9 +56,19 @@ public class EnemyRino :Enemy
 
     }
 
+    private void HandleSpeedUp()
+    {
+        moveSpeed += speedUpRate * Time.deltaTime;
+
+        if (moveSpeed > maxSpeed)
+        {
+            maxSpeed = moveSpeed;
+        }
+    }
+
     private void TurnAround()
     {
-        moveSpeed = defaultSpeed;
+        SpeedReset();
         canMove = false;
         rb.velocity = Vector2.zero;
         flip();
@@ -69,10 +78,15 @@ public class EnemyRino :Enemy
     private void wallHit()
     {
         canMove = false;
-        moveSpeed = default;
-        moveSpeed = defaultSpeed;
+        SpeedReset();
         anim.SetBool("hitWall", true);
         rb.velocity = new Vector2(impactPower.x * -facinDir, impactPower.y);
+    }
+
+    private void SpeedReset()
+    {
+        moveSpeed = default;
+        moveSpeed = defaultSpeed;
     }
 
     private void chargeIsOver()
@@ -82,22 +96,17 @@ public class EnemyRino :Enemy
         Invoke(nameof(flip), 1);
     }
 
-
+    
+   
     protected override void HandleCollision()
     {
         base.HandleCollision();
-        playerDetected = Physics2D.Raycast(transform.position, Vector2.right * facinDir, detectionRange, whatIsPlayer);
-
-        if(playerDetected && isGrounded )
+        if(isPlayerDetected && isGrounded )
         {
             canMove = true;
            
         }
     }
 
-    protected override void OnDrawGizmos()
-    {
-        base.OnDrawGizmos();
-        Gizmos.DrawLine(transform.position, new Vector2(transform.position.x + (detectionRange * facinDir), transform.position.y));
-    }
+   
 }
