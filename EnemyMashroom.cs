@@ -14,14 +14,14 @@ public class EnemyMashroom : Enemy
     protected override void Update()
     {
         base.Update();  
-        anim.SetFloat("xVelocity", rb.velocity.x);
+        
 
         if(isDead)
         {
             return;
         }   
         handleMovement();
-        HandleCollision();
+        
         if(!isGroundInFrontDetected || isWallDetected)
         {
             if(isGrounded== false)
