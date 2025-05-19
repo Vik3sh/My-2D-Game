@@ -12,5 +12,12 @@ public class deadZone : MonoBehaviour
             plyr.Die();
             GameManager.Instance.respawnLayer();
         }
+
+        Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+        if (enemy != null)
+        {
+            enemy.Die();
+            
+        }
     }
 }
