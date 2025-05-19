@@ -18,16 +18,17 @@ public class Enemy : MonoBehaviour
     [Header("Genereal Info")]   
      
     [SerializeField] protected float moveSpeed =2f;
-    protected bool canMove = false;
     [SerializeField] protected float idleDuration =1.5f;
-    [SerializeField]protected float idleTimer;
+    protected float idleTimer;
+    protected bool canMove =true;
+   
 
 
 
     [Header("Death Details")]
-    [SerializeField] private float deathImpactSpeed=5;
-    [SerializeField] private float deathRotaitionSpeed=150;
-    private int deathRotationDirection = 1;
+    [SerializeField] protected float deathImpactSpeed=5;
+    [SerializeField] protected float deathRotaitionSpeed=150;
+    protected int deathRotationDirection = 1;
     protected bool isDead;
 
 
@@ -107,6 +108,8 @@ public class Enemy : MonoBehaviour
         {
             deathRotationDirection = deathRotationDirection * -1;
         }
+
+        Destroy(gameObject, 10);
     }
     private void HandleDeath()
     {
