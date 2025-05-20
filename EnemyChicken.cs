@@ -14,18 +14,23 @@ public class EnemyChicken : Enemy
     private bool canFlip = true;
     private bool playerDetected;
 
-    
+
     
     protected override void Update()
     {
         base.Update();
+
+        if(playerDetected == true)
+        {
+            Debug.Log("Player detected");   
+        }
         
 
         if (isDead)
         {
             return;
         }
-        if (playerDetected)
+        if (isPlayerDetected)
         {
             canMove = true;
             aggroTimer -= Time.deltaTime;
