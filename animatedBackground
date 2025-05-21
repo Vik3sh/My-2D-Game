@@ -1,0 +1,38 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public enum BackgroundType { Blue, Green, Gray, Pink, Purple, Yellow}
+
+public class animatedBackground : MonoBehaviour
+{
+    [SerializeField] private Vector2 movementDirection;
+    private MeshRenderer mesh;
+
+    [Header("Colors")]
+    [SerializeField] private BackgroundType backgroundType;
+    [SerializeField] private Texture2D[] textures;
+
+    private void Awake()
+    {
+        mesh = GetComponent<MeshRenderer>();   
+        
+
+    }
+
+    private void Update()
+    {
+        mesh.material.mainTextureOffset += movementDirection * Time.deltaTime;
+        updateBackgroundTexture();
+    }
+
+    [ContextMenu("Update Background")]
+    private void updateBackgroundTexture()
+    {
+        if(mesh == null)
+        {
+            mesh = GetComponent<MeshRenderer>();
+        }
+        mesh.sharedMaterial.mainTexture = textures[((int)backgroundType)];
+    }
+}
