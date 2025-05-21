@@ -12,7 +12,7 @@ public class FiniahPoint : MonoBehaviour
         if( plyr != null )
         {
             anim.SetTrigger("activate");
-            Debug.Log("You Completed the Level");
+            GameManager.Instance.LeveFinished();
         }
     }
 }
