@@ -27,7 +27,7 @@ This is a classic 2D  platformer gmae featuring:
 - [x] Enemy patrol behavior
 - [ ] Scoring system
 - [ ] Sound and background music
-- [ ] UI and menu screens
+- [x] UI and menu screens
 
 ## 💡 Future Plans
 - Add new levels with unique challenges
