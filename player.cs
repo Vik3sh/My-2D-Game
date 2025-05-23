@@ -63,8 +63,10 @@ public class player : MonoBehaviour
 
     private bool facingRight = true;
 
-    [Header("vfx")]
+    [Header("Player Visuals")]
+    [SerializeField] private AnimatorOverrideController[] animators;
     [SerializeField] private GameObject deathVFX;
+    [SerializeField] private int skinID;
 
 
     
@@ -81,7 +83,10 @@ public class player : MonoBehaviour
     private void Start()
     {
         defaultGravityScale=rb.gravityScale;
-        RespawnFinished(false); 
+        RespawnFinished(false);
+        UpdateSkin  ();
+
+
     }
 
     private void Update()
@@ -114,6 +119,20 @@ public class player : MonoBehaviour
 
     }
 
+    public void UpdateSkin()
+    {
+
+        SkinManager skinManager = SkinManager.Instance;
+
+
+        if(skinManager == null)
+        {
+            return;
+        }
+
+        anim.runtimeAnimatorController = animators[skinManager.chosenSkinId];
+    }
+
     private void HandleEnemyDetection()
     {
         if (rb.velocity.y>=0)
@@ -138,7 +157,7 @@ public class player : MonoBehaviour
         
         if (finished)
         {
-            rb.gravityScale=defaultGravityScale;
+            rb.gravityScale=7;
             cd.enabled = true;
             canBeControlled = true;
         }
