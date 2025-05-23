@@ -26,6 +26,7 @@ This is a classic 2D  platformer gmae featuring:
 - [x] Initial level design
 - [x] Enemy patrol behavior
 - [ ] Scoring system
+- [x] Skin Selection System
 - [ ] Sound and background music
 - [x] UI and menu screens
 
