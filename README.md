@@ -1,5 +1,5 @@
 # 2D Platformer Game
-
+Added new features
 Welcome to my 2D Platformer Game! This project is built using Unity/C# and is part of my game development journey.
 
 ## 🎮 Game Overview
